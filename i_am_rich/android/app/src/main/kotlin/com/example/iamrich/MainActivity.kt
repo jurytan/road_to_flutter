@@ -1,4 +1,4 @@
-package com.example.iamrich
+package com.example.i_am_rich
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
