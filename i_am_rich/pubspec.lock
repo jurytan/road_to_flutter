@@ -169,7 +169,11 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD:i_am_rich/pubspec.lock
     version: "0.2.11"
+=======
+    version: "0.2.15"
+>>>>>>> Starting anew:i_am_rich/pubspec.lock
   typed_data:
     dependency: transitive
     description:

@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< HEAD:i_am_rich/android/app/src/debug/AndroidManifest.xml
     package="com.example.i_am_rich">
+=======
+    package="com.nguyeningcode.iamrich">
+>>>>>>> Starting anew:i_am_rich/android/app/src/debug/AndroidManifest.xml
     <!-- Flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->

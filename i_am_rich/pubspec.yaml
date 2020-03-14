@@ -1,5 +1,10 @@
+<<<<<<< HEAD:i_am_rich/pubspec.yaml
 name: i_am_rich
 description: A new Flutter project.
+=======
+name: iamrich
+description: A new Flutter application.
+>>>>>>> Starting anew:i_am_rich/pubspec.yaml
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
