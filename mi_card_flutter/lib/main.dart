@@ -39,12 +39,64 @@ class MyApp extends StatelessWidget {
                     fontFamily: 'Source Sans Pro',
                   ),
                 ),
-                Container(
+                Card(
+                  color: Colors.white,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 25.0,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
                     child: Row(
-                  children: <Widget>[
-
-                  ],
-                )),
+                      children: <Widget>[
+                        Icon(
+                          Icons.phone,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Text(
+                          '(669) 342-8101',
+                          style: TextStyle(
+                            color: Colors.blue.shade900,
+                            fontFamily: 'Source Sans Pro',
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  color: Colors.white,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 25.0,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.email,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Text(
+                          'jnguyen7410@gmail.com',
+                          style: TextStyle(
+                            color: Colors.blue.shade900,
+                            fontFamily: 'Source Sans Pro',
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
