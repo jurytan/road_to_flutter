@@ -35,8 +35,8 @@ class _QuizPageState extends State<QuizPage> {
 
   void resetQuiz() {
     scoreKeeper = [];
-        numCorrect = 0;
-        quizBrain.reset();
+    numCorrect = 0;
+    quizBrain.reset();
   }
 
   Icon _xmark() {
