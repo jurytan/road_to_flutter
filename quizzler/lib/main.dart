@@ -53,7 +53,6 @@ class _QuizPageState extends State<QuizPage> {
       scoreKeeper.add(quizBrain.getQuestionAnswer() == userPickedAnswer
           ? _checkmark()
           : _xmark());
-      quizBrain.nextQuestion();
       if (quizBrain.isFinished()) {
         Alert(
             context: context,
@@ -73,8 +72,12 @@ class _QuizPageState extends State<QuizPage> {
                 width: 120,
               ),
             ]).show();
+        // reset all stats here
         scoreKeeper = [];
+        numCorrect = 0;
         quizBrain.reset();
+      } else {
+        quizBrain.nextQuestion();
       }
     });
   }
