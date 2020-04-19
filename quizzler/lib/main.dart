@@ -33,6 +33,12 @@ class _QuizPageState extends State<QuizPage> {
 
   int numCorrect = 0;
 
+  void resetQuiz() {
+    scoreKeeper = [];
+        numCorrect = 0;
+        quizBrain.reset();
+  }
+
   Icon _xmark() {
     return Icon(
       Icons.close,
@@ -73,9 +79,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ]).show();
         // reset all stats here
-        scoreKeeper = [];
-        numCorrect = 0;
-        quizBrain.reset();
+        resetQuiz();
       } else {
         quizBrain.nextQuestion();
       }
@@ -103,8 +107,7 @@ class _QuizPageState extends State<QuizPage> {
                   ),
                   onPressed: () {
                     setState(() {
-                      quizBrain.reset();
-                      scoreKeeper = [];
+                      resetQuiz();
                     });
                   },
                 ),
