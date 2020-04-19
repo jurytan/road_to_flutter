@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'question.dart';
 
 void main() => runApp(Quizzler());
 
@@ -25,6 +26,29 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreKeeper = [];
+  List<Question> questions = [
+    Question('You can lead a cow down stairs but not up stairs.', false),
+    Question('Approximately one quarter of human bones are in the feet.', true),
+    Question('A slug\'s blood is green.', true)
+  ];
+  
+  int questionNum = 0;
+
+  Icon _xmark() {
+    return Icon(
+      Icons.close,
+      color: Colors.red,
+    );
+  }
+
+  Icon _checkmark() {
+    return Icon(
+      Icons.check,
+      color: Colors.green,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,12 +56,35 @@ class _QuizPageState extends State<QuizPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: EdgeInsets.all(0),
+                  child: Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      scoreKeeper = [];
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
           flex: 5,
           child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                questions[questionNum].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -62,6 +109,16 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
+                setState(() {
+                  scoreKeeper.add(questions[questionNum].questionAnswer
+                      ? _checkmark()
+                      : _xmark());
+                  if (questionNum == questions.length - 1) {
+                    questionNum = 0;
+                  } else {
+                    questionNum++;
+                  }
+                });
               },
             ),
           ),
@@ -80,18 +137,27 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
+                setState(() {
+                  scoreKeeper.add(!questions[questionNum].questionAnswer
+                      ? _checkmark()
+                      : _xmark());
+                  if (questionNum == questions.length - 1) {
+                    questionNum = 0;
+                  } else {
+                    questionNum++;
+                  }
+                });
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: scoreKeeper,
+          ),
+        ),
       ],
     );
   }
 }
-
-/*
-question1: 'You can lead a cow down stairs but not up stairs.', false,
-question2: 'Approximately one quarter of human bones are in the feet.', true,
-question3: 'A slug\'s blood is green.', true,
-*/
