@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'question.dart';
+import 'quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(Quizzler());
 
@@ -27,13 +30,8 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
-  List<Question> questions = [
-    Question('You can lead a cow down stairs but not up stairs.', false),
-    Question('Approximately one quarter of human bones are in the feet.', true),
-    Question('A slug\'s blood is green.', true)
-  ];
-  
-  int questionNum = 0;
+
+  int numCorrect = 0;
 
   Icon _xmark() {
     return Icon(
@@ -43,10 +41,42 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   Icon _checkmark() {
+    numCorrect++;
     return Icon(
       Icons.check,
       color: Colors.green,
     );
+  }
+
+  void checkAnswer(bool userPickedAnswer) {
+    setState(() {
+      scoreKeeper.add(quizBrain.getQuestionAnswer() == userPickedAnswer
+          ? _checkmark()
+          : _xmark());
+      quizBrain.nextQuestion();
+      if (quizBrain.isFinished()) {
+        Alert(
+            context: context,
+            title: "QUIZ FINISHED",
+            type: numCorrect/quizBrain.getQuestionsSize() >= 0.75 ? AlertType.success : AlertType.error,
+            desc: "You got $numCorrect/${quizBrain.getQuestionsSize()} correct!",
+            buttons: [
+              DialogButton(
+                child: Text(
+                  'PLAY AGAIN',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              ),
+            ]).show();
+        scoreKeeper = [];
+        quizBrain.reset();
+      }
+    });
   }
 
   @override
@@ -70,6 +100,7 @@ class _QuizPageState extends State<QuizPage> {
                   ),
                   onPressed: () {
                     setState(() {
+                      quizBrain.reset();
                       scoreKeeper = [];
                     });
                   },
@@ -84,7 +115,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questions[questionNum].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -109,16 +140,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
-                setState(() {
-                  scoreKeeper.add(questions[questionNum].questionAnswer
-                      ? _checkmark()
-                      : _xmark());
-                  if (questionNum == questions.length - 1) {
-                    questionNum = 0;
-                  } else {
-                    questionNum++;
-                  }
-                });
+                checkAnswer(true);
               },
             ),
           ),
@@ -137,16 +159,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
-                setState(() {
-                  scoreKeeper.add(!questions[questionNum].questionAnswer
-                      ? _checkmark()
-                      : _xmark());
-                  if (questionNum == questions.length - 1) {
-                    questionNum = 0;
-                  } else {
-                    questionNum++;
-                  }
-                });
+                checkAnswer(false);
               },
             ),
           ),
