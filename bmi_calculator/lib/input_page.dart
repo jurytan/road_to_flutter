@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'icon_content.dart';
 import 'reusable_card.dart';
@@ -14,12 +15,82 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   Gender selectedGender;
   int height = 60;
+  int weight = 100;
+  int age = 20;
+
+  List<Text> _renderHeight(int height) {
+    switch (kUnitOfMeasurement) {
+      case Unit.IMPERICAL_INCHES:
+        return [
+          Text(
+            (height).toString(),
+            style: kNumberTextStyle,
+          ),
+          Text('in', style: kLabelTextStyle),
+        ];
+      case Unit.IMPERICAL:
+        return [
+          Text(
+            (height ~/ 12).toString(),
+            style: kNumberTextStyle,
+          ),
+          Text('ft', style: kLabelTextStyle),
+          Text(
+            (height % 12).toString(),
+            style: kNumberTextStyle,
+          ),
+          Text('in', style: kLabelTextStyle),
+        ];
+      case Unit.METRIC:
+        return [
+          Text(
+            (height).toString(),
+            style: kNumberTextStyle,
+          ),
+          Text('cm', style: kLabelTextStyle),
+        ];
+    }
+  }
+
+  List<Text> _renderWeight(int weight) {
+    List<Text> results = [
+      Text(
+        weight.toString(),
+        style: kNumberTextStyle,
+      ),
+    ];
+    switch (kUnitOfMeasurement) {
+      case Unit.IMPERICAL_INCHES:
+      case Unit.IMPERICAL:
+        results.add(Text('lb', style: kLabelTextStyle));
+        break;
+      case Unit.METRIC:
+        results.add(Text('kg', style: kLabelTextStyle));
+        break;
+    }
+    return results;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('BMI CALCULATOR'),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.sort),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [],
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -30,6 +101,7 @@ class _InputPageState extends State<InputPage> {
               children: [
                 Expanded(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         child: ReusableCard(
@@ -67,7 +139,6 @@ class _InputPageState extends State<InputPage> {
                   ),
                 ),
                 Expanded(
-                  flex: 2,
                   child: ReusableCard(
                     cardColor: kActiveColor,
                     child: Column(
@@ -81,19 +152,15 @@ class _InputPageState extends State<InputPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.baseline,
                           textBaseline: TextBaseline.alphabetic,
-                          children: [
-                            Text(
-                              height.toString(),
-                              style: kNumberTextStyle,
-                            ),
-                            Text('in', style: kLabelTextStyle),
-                          ],
+                          children: _renderHeight(height),
                         ),
                         SliderTheme(
                           data: SliderTheme.of(context).copyWith(
                             thumbColor: kAccentColor,
-                            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15.0),
-                            overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0),
+                            thumbShape:
+                                RoundSliderThumbShape(enabledThumbRadius: 15.0),
+                            overlayShape:
+                                RoundSliderOverlayShape(overlayRadius: 30.0),
                             overlayColor: kTransparentAccentColor,
                             activeTrackColor: Colors.white,
                             inactiveTrackColor: kGreyColor,
@@ -113,12 +180,109 @@ class _InputPageState extends State<InputPage> {
                 ),
                 Expanded(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: ReusableCard(cardColor: kActiveColor),
+                        child: ReusableCard(
+                          cardColor: kInactiveColor,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'WEIGHT',
+                                style: kLabelTextStyle,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: _renderWeight(weight),
+                              ),
+                              // add two buttons here
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RoundIconButton(
+                                    icon: FontAwesomeIcons.minus,
+                                    callback: () {
+                                      setState(() {
+                                        if (weight - kWeightIncrement >=
+                                            kMinWeight) {
+                                          weight -= kWeightIncrement;
+                                        }
+                                        print('Weight --');
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  RoundIconButton(
+                                    icon: FontAwesomeIcons.plus,
+                                    callback: () {
+                                      setState(() {
+                                        if (weight + kWeightIncrement <=
+                                            kMaxWeight) {
+                                          weight += kWeightIncrement;
+                                        }
+                                        print('Weight ++');
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       Expanded(
-                        child: ReusableCard(cardColor: kActiveColor),
+                        child: ReusableCard(
+                          cardColor: kInactiveColor,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'AGE',
+                                style: kLabelTextStyle,
+                              ),
+                              Text(
+                                age.toString(),
+                                style: kNumberTextStyle,
+                              ),
+                              // add two buttons here
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RoundIconButton(
+                                    icon: FontAwesomeIcons.minus,
+                                    callback: () {
+                                      setState(() {
+                                        if (age - 1 >= 5) {
+                                          age--;
+                                        }
+                                        print('Age --');
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  RoundIconButton(
+                                    icon: FontAwesomeIcons.plus,
+                                    callback: () {
+                                      setState(() {
+                                        if (age + 1 <= 120) {
+                                          age++;
+                                        }
+                                        print('Age ++');
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -126,16 +290,56 @@ class _InputPageState extends State<InputPage> {
               ],
             ),
           ),
-          Container(
-            color: kAccentColor,
-            margin: EdgeInsets.only(
-              top: 10.0,
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/results');
+            },
+            child: Container(
+              margin: EdgeInsets.only(
+                top: 10.0,
+              ),
+              width: double.infinity,
+              color: kAccentColor,
+              padding: (Theme.of(context).platform == TargetPlatform.iOS)
+                  ? EdgeInsets.only(bottom: 20.0)
+                  : null,
+              height: kBottomContainerHeight,
+              child: Center(
+                child: Text(
+                  'CALCULATE',
+                  style: kButtonTextStyle,
+                ),
+              ),
             ),
-            width: double.infinity,
-            height: kBottomContainerHeight,
           ),
         ],
       ),
+    );
+  }
+}
+
+class RoundIconButton extends StatelessWidget {
+  RoundIconButton({@required this.icon, @required this.callback});
+
+  final IconData icon;
+  final Function callback;
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      onPressed: this.callback,
+      child: Icon(
+        icon,
+        color: Colors.white,
+        size: 25.0,
+      ),
+      elevation: 0.0,
+      constraints: BoxConstraints.tightFor(
+        width: 56.0,
+        height: 56.0,
+      ),
+      shape: CircleBorder(),
+      fillColor: kActiveButtonColor,
     );
   }
 }
