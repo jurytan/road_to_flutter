@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'icon_content.dart';
 import 'reusable_card.dart';
+import 'calculate_button.dart';
 import 'constants.dart';
 
 enum Gender { MALE, FEMALE }
@@ -49,6 +50,8 @@ class _InputPageState extends State<InputPage> {
           ),
           Text('cm', style: kLabelTextStyle),
         ];
+      default:
+        return new List<Text>();
     }
   }
 
@@ -290,27 +293,9 @@ class _InputPageState extends State<InputPage> {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/results');
-            },
-            child: Container(
-              margin: EdgeInsets.only(
-                top: 10.0,
-              ),
-              width: double.infinity,
-              color: kAccentColor,
-              padding: (Theme.of(context).platform == TargetPlatform.iOS)
-                  ? EdgeInsets.only(bottom: 20.0)
-                  : null,
-              height: kBottomContainerHeight,
-              child: Center(
-                child: Text(
-                  'CALCULATE',
-                  style: kButtonTextStyle,
-                ),
-              ),
-            ),
+          CalculateButton(
+            label: 'CALCULATE',
+            route: '/results',
           ),
         ],
       ),

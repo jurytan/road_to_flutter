@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 enum Unit { IMPERICAL, IMPERICAL_INCHES, METRIC }
 
+enum BMIStatus { UNDERWEIGHT, NORMAL, OVERWEIGHT }
+
 const Unit kUnitOfMeasurement = Unit.IMPERICAL;
 
 final kMinHeight = kUnitOfMeasurement == Unit.METRIC ? 60.0 : 25.0;
@@ -28,7 +30,28 @@ const kNumberTextStyle = TextStyle(
   fontWeight: FontWeight.w900,
 );
 
+final kResultNumRatingTextStyle = TextStyle(
+  fontSize: 20.0,
+  fontWeight: FontWeight.bold,
+  color: Color(0xFF61DC85),
+);
+
+const kResultNumberTextStyle = TextStyle(
+  fontSize: 100.0,
+  fontWeight: FontWeight.w900,
+);
+
+const kResultCommentTextStyle = TextStyle(
+  fontSize: 20.0,
+  fontWeight: FontWeight.w300,
+);
+
 const kButtonTextStyle = TextStyle(
   fontSize: 25.0,
+  fontWeight: FontWeight.bold,
+);
+
+const kHeaderTextStyle = TextStyle(
+  fontSize: 35.0,
   fontWeight: FontWeight.bold,
 );
