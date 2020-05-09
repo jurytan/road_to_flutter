@@ -1,12 +1,21 @@
+import 'package:bmi_calculator/calculator_brain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'calculate_button.dart';
 import 'icon_content.dart';
 import 'reusable_card.dart';
-import 'calculate_button.dart';
 import 'constants.dart';
 
 enum Gender { MALE, FEMALE }
+
+class BmiResults {
+  final String bmiResults;
+  final String resultText;
+  final String interpretation;
+
+  BmiResults({this.bmiResults, this.resultText, this.interpretation});
+}
 
 class InputPage extends StatefulWidget {
   @override
@@ -74,6 +83,18 @@ class _InputPageState extends State<InputPage> {
     return results;
   }
 
+  List<ListTile> _butts() {
+    List<ListTile> result = List<ListTile>();
+    for (int i = 0; i < 2000; i++) {
+      result.add(
+        ListTile(
+          title: Text('Butts'),
+        ),
+      );
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +113,7 @@ class _InputPageState extends State<InputPage> {
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: [],
+          children: _butts(),
         ),
       ),
       body: Column(
@@ -295,7 +316,18 @@ class _InputPageState extends State<InputPage> {
           ),
           CalculateButton(
             label: 'CALCULATE',
-            route: '/results',
+            onTap: () {
+              CalculatorBrain calc = CalculatorBrain(
+                height: height,
+                weight: weight,
+              );
+              Navigator.pushNamed(context, '/results',
+                  arguments: BmiResults(
+                    bmiResults: calc.calculateBMI(),
+                    resultText: calc.getResult(),
+                    interpretation: calc.getInterpretation(),
+                  ));
+            },
           ),
         ],
       ),

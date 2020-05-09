@@ -5,6 +5,12 @@ import 'calculate_button.dart';
 import 'constants.dart';
 
 class ResultsPage extends StatelessWidget {
+  ResultsPage({this.bmiResults, this.resultText, this.interpretation});
+
+  final String bmiResults;
+  final String resultText;
+  final String interpretation;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,17 +40,17 @@ class ResultsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'OVERWEIGHT',
+                    resultText.toUpperCase(),
                     style: kResultNumRatingTextStyle,
                   ),
                   Text(
-                    '26.7',
+                    bmiResults,
                     style: kResultNumberTextStyle,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Text(
-                      'You have a higher than normal body weight. Try to exercise more.',
+                      interpretation,
                       style: kResultCommentTextStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -55,7 +61,10 @@ class ResultsPage extends StatelessWidget {
           ),
           CalculateButton(
             label: 'RE-CALCULATE',
-            route: '/',
+            onTap: () {
+              // Navigator.pushNamed(context, '/results');
+              Navigator.pop(context);
+            },
           ),
         ],
       ),
