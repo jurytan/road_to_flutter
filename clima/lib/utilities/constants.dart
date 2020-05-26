@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+enum Unit { IMPERIAL, METRIC }
+
+Unit kUnitSystem = Unit.IMPERIAL;
+
 const kTempTextStyle = TextStyle(
   fontFamily: 'Spartan MB',
   fontSize: 100.0,
