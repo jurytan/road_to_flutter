@@ -14,8 +14,51 @@ class _PriceScreenState extends State<PriceScreen> {
   Widget build(BuildContext context) {
     var platform = Theme.of(context).platform;
 
-    print('IOS: ${platform == TargetPlatform.iOS}');
-    print('Android: ${platform == TargetPlatform.android}');
+    CupertinoPicker iOSPicker() {
+      return CupertinoPicker(
+        itemExtent: 32.0,
+        backgroundColor: Colors.lightBlue,
+        onSelectedItemChanged: (selectedIndex) {
+          setState(() => currency = currenciesList[selectedIndex]);
+        },
+        children: currenciesList.map<Text>((String value) {
+          return Text(
+            value,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          );
+        }).toList(),
+      );
+    }
+
+    DropdownButton<String> androidDropdown() {
+      return DropdownButton<String>(
+        value: currency,
+        items: currenciesList.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: ((String value) {
+          setState(() => currency = value);
+        }),
+      );
+    }
+
+    /** This makes no sense for two platforms, but it will when we extend it
+     * to work for other platforms like desktop and web.
+     */
+    Widget getPicker() {
+      switch (platform) {
+        case TargetPlatform.iOS:
+          return iOSPicker();
+        case TargetPlatform.android:
+        default:
+          return androidDropdown();
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -51,30 +94,8 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
-            child: platform == TargetPlatform.iOS
-                ? CupertinoPicker(
-                    itemExtent: 32.0,
-                    onSelectedItemChanged: (selectedIndex) {
-                      setState(() => currency = currenciesList[selectedIndex]);
-                    },
-                    children: currenciesList.map<Text>((String value) {
-                      return Text(value);
-                    }).toList(),
-                  )
-                : DropdownButton<String>(
-                    value: currency,
-                    items: currenciesList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: ((String value) {
-                      setState(() => currency = value);
-                    }),
-                  ),
-          ),
+            child: getPicker(),
+          )
         ],
       ),
     );
