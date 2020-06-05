@@ -1,14 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'coin_data.dart';
+import 'package:bitcoin_ticker/utilities/coin_data.dart';
+import 'package:bitcoin_ticker/widgets/crypto_card.dart';
 
 class PriceScreen extends StatefulWidget {
+  PriceScreen({this.cryptoMap});
+
+  final cryptoMap;
+
   @override
   _PriceScreenState createState() => _PriceScreenState();
 }
 
 class _PriceScreenState extends State<PriceScreen> {
   String currency = 'USD';
+  CoinData coinData;
+  Map<String, String> selectedCurrencyPrices;
+  List<Widget> cryptoCards;
+
+  @override
+  void initState() {
+    super.initState();
+    coinData = CoinData();
+    updateUI();
+  }
+
+  void updateUI() {
+    setState(() {
+      cryptoCards = getCryptoCards(widget.cryptoMap);
+    });
+  }
+
+  List<Widget> getCryptoCards(dynamic cryptoMap) {
+    return cryptoList
+        .map((String crypto) => CryptoCard(
+            cryptoCurrency: crypto,
+            targetCurrency: currency,
+            price: cryptoMap['$crypto']['$currency'] ?? 0.0))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +49,10 @@ class _PriceScreenState extends State<PriceScreen> {
         itemExtent: 32.0,
         backgroundColor: Colors.lightBlue,
         onSelectedItemChanged: (selectedIndex) {
-          setState(() => currency = currenciesList[selectedIndex]);
+          setState(() {
+            currency = currenciesList[selectedIndex];
+            updateUI();
+          });
         },
         children: currenciesList.map<Text>((String value) {
           return Text(
@@ -42,14 +75,16 @@ class _PriceScreenState extends State<PriceScreen> {
           );
         }).toList(),
         onChanged: ((String value) {
-          setState(() => currency = value);
+          setState(() {
+            currency = value;
+            updateUI();
+          });
         }),
       );
     }
 
-    /** This makes no sense for two platforms, but it will when we extend it
-     * to work for other platforms like desktop and web.
-     */
+    /// This makes no sense for two platforms, but it will when we extend it
+    ///  to work for other platforms like desktop and web.
     Widget getPicker() {
       switch (platform) {
         case TargetPlatform.iOS:
@@ -68,25 +103,10 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = ? USD',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: cryptoCards,
             ),
           ),
           Container(

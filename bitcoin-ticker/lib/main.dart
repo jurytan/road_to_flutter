@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'price_screen.dart';
+import 'package:bitcoin_ticker/screens/loading_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.lightBlue,
           scaffoldBackgroundColor: Colors.white),
       darkTheme: ThemeData.dark().copyWith(primaryColor: Colors.lightBlue),
-      home: PriceScreen(),
+      home: LoadingScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
