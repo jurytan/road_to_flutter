@@ -21,7 +21,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   void initState() {
     super.initState();
     controller = AnimationController(
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 1),
       vsync: this,
     );
     animation = ColorTween(
@@ -30,9 +30,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     ).animate(controller);
     controller.forward();
     controller.addListener(() {
-      setState(() {
-        print(animation.value);
-      });
+      setState(() {});
     });
   }
 
@@ -62,13 +60,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ),
                 TypewriterAnimatedTextKit(
-                  totalRepeatCount: 1,
-                  speed: Duration(
-                    milliseconds: (controller.value * 10).toInt(),
-                  ),
                   text: [
                     'Flash Chat',
                   ],
+                  speed: Duration(
+                    // default is 30ms, bumping it to 275 to slow it down by ~10x
+                    milliseconds: 275,
+                  ),
+                  repeatForever: true,
                   textStyle: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
