@@ -69,8 +69,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                   repeatForever: true,
                   textStyle: TextStyle(
-                    fontSize: 45.0,
+                    fontSize: 42.0,
                     fontWeight: FontWeight.w900,
+                    fontFamily: 'Roboto',
                   ),
                 ),
               ],
