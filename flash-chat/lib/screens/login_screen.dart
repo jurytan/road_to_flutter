@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'chat_screen.dart';
 import 'package:flash_chat/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/services/login_service.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = 'login';
@@ -12,7 +13,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _auth = FirebaseAuth.instance;
+  // final _auth = FirebaseAuth.instance;
+  static LoginService _login = LoginService();
+  final _auth = _login.firebaseAuth;
   String email;
   String password;
 
@@ -69,9 +72,32 @@ class _LoginScreenState extends State<LoginScreen> {
               buttonText: 'Log In',
               onPressed: () async {
                 try {
-                  final user = _auth.signInWithEmailAndPassword(
+                  final user = await _auth.signInWithEmailAndPassword(
                       email: email, password: password);
                   if (user != null) {
+                    Navigator.pushNamed(context, ChatScreen.id);
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
+            ),
+            RoundedButton(
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Continue with '),
+                  Container(
+                    height: 25.0,
+                    child: Image.asset('images/google-logo.png'),
+                  ),
+                ],
+              ),
+              onPressed: () async {
+                try {
+                  final newUser = await _login.signInWithGoogle();
+                  if (newUser != null) {
                     Navigator.pushNamed(context, ChatScreen.id);
                   }
                 } catch (e) {

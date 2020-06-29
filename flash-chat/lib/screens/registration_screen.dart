@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import '../constants.dart';
 import 'chat_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/services/login_service.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = 'registration';
@@ -12,7 +12,8 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final _auth = FirebaseAuth.instance;
+  static LoginService _login = LoginService();
+  final _auth = _login.firebaseAuth;
   String email;
   String password;
 
@@ -71,6 +72,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 try {
                   final newUser = await _auth.createUserWithEmailAndPassword(
                       email: email, password: password);
+                  if (newUser != null) {
+                    Navigator.pushNamed(context, ChatScreen.id);
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
+            ),
+            RoundedButton(
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Continue with '),
+                  Container(
+                    height: 25.0,
+                    child: Image.asset('images/google-logo.png'),
+                  ),
+                ],
+              ),
+              onPressed: () async {
+                try {
+                  final newUser = await _login.signInWithGoogle();
                   if (newUser != null) {
                     Navigator.pushNamed(context, ChatScreen.id);
                   }
