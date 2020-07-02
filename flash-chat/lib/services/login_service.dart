@@ -86,4 +86,6 @@ class LoginService {
   bool get googleSignIn => _googleSignIn;
 
   bool get signedIn => _user != null;
+
+  FirebaseUser get user => _user;
 }
