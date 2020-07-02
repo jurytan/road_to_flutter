@@ -13,9 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // final _auth = FirebaseAuth.instance;
   static LoginService _login = LoginService();
-  final _auth = _login.firebaseAuth;
   String email;
   String password;
 
@@ -72,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               buttonText: 'Log In',
               onPressed: () async {
                 try {
-                  final user = await _auth.signInWithEmailAndPassword(
+                  final user = await _login.signInWithEmail(
                       email: email, password: password);
                   if (user != null) {
                     Navigator.pushNamed(context, ChatScreen.id);
@@ -98,7 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 try {
                   final newUser = await _login.signInWithGoogle();
                   if (newUser != null) {
-                    Navigator.pushNamed(context, ChatScreen.id);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, ChatScreen.id, (_) => false);
                   }
                 } catch (e) {
                   print(e);

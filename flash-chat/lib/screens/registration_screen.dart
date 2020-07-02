@@ -13,7 +13,6 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   static LoginService _login = LoginService();
-  final _auth = _login.firebaseAuth;
   String email;
   String password;
 
@@ -70,7 +69,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               buttonText: 'Register',
               onPressed: () async {
                 try {
-                  final newUser = await _auth.createUserWithEmailAndPassword(
+                  final newUser = await _login.registerWithEmail(
                       email: email, password: password);
                   if (newUser != null) {
                     Navigator.pushNamed(context, ChatScreen.id);
@@ -96,7 +95,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 try {
                   final newUser = await _login.signInWithGoogle();
                   if (newUser != null) {
-                    Navigator.pushNamed(context, ChatScreen.id);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, ChatScreen.id, (_) => false);
                   }
                 } catch (e) {
                   print(e);
