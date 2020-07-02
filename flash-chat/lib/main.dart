@@ -16,7 +16,7 @@ Future<void> main() async {
 }
 
 Future<String> _handleLandingPage() async {
-  final _auth = FirebaseAuth.instance;
+  final _auth = _login.firebaseAuth;
   final user = await _auth.currentUser();
   return user != null ? ChatScreen.id : WelcomeScreen.id;
 }
