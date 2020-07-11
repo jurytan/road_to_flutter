@@ -4,6 +4,7 @@ import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/services/login_service.dart';
 import 'package:flash_chat/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flash_chat/components/messages_stream.dart';
 
 class ChatScreen extends StatefulWidget {
   static String id = 'chat';
@@ -13,10 +14,12 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final _firestore = Firestore.instance;
   static LoginService _login = LoginService();
+  final _firestore = Firestore.instance;
   final _auth = _login.firebaseAuth;
+  final messageTextCtrl = TextEditingController();
   FirebaseUser loggedInUser;
+
   String messageText;
 
   @override
@@ -35,21 +38,6 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     } catch (e) {
       print(e);
-    }
-  }
-
-  void getMessages() async {
-    final messages = await _firestore.collection('messages').getDocuments();
-    for (var message in messages.documents) {
-      print(message.data);
-    }
-  }
-
-  void messagesStream() async {
-    await for (var snapshot in _firestore.collection('messages').snapshots()) {
-      for (var message in snapshot.documents) {
-        print(message.data);
-      }
     }
   }
 
@@ -76,6 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            MessagesStream(),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -83,6 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageTextCtrl,
                       onChanged: (value) {
                         messageText = value;
                       },
@@ -94,7 +84,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       _firestore.collection('messages').add({
                         "text": messageText,
                         "sender": loggedInUser.email,
+                        "time": DateTime.now().millisecondsSinceEpoch,
                       });
+                      messageTextCtrl.clear();
                     },
                     child: Text(
                       'Send',

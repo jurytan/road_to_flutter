@@ -11,7 +11,23 @@ class LoginService {
 
   factory LoginService() => _instance;
 
-  LoginService._internal();
+  LoginService._internal() {
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      if (_user != null) {
+        return;
+      }
+      final user = await _auth.currentUser();
+      if (user != null) {
+        _user = user;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<AuthResult> registerWithEmail({String email, String password}) async {
     try {
