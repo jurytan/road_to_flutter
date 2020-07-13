@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:todoeyflutter/widgets/task_tile.dart';
-import 'package:todoeyflutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoeyflutter/models/task_list_data.dart';
 
-class TaskList extends StatefulWidget {
-  @override
-  _TaskListState createState() => _TaskListState();
-
-  List<Task> tasks;
-
-  TaskList({this.tasks});
-}
-
-class _TaskListState extends State<TaskList> {
+class TaskList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return TaskTile(
-          text: widget.tasks[index].taskText,
-          isDone: widget.tasks[index].isDone,
-          onChanged: (checkboxState) =>
-              setState(() => widget.tasks[index].toggleDone()),
-          deleteOnTap: () =>
-              setState(() => widget.tasks.remove(widget.tasks[index])),
+    return Consumer<TaskListData>(
+      builder: (context, taskListData, child) {
+        // Removed listener to prevent rebuilding of stateless widget
+        taskListData.removeListener(() {});
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            final task = taskListData.tasks[index];
+            return TaskTile(
+              text: task.taskText,
+              isDone: task.isDone,
+              onChanged: (_) => taskListData.toggleDone(index),
+              deleteOnTap: () =>
+                  Provider.of<TaskListData>(context, listen: false)
+                      .removeTask(index),
+            );
+          },
+          itemCount: taskListData.taskCount,
         );
       },
-      itemCount: widget.tasks.length,
     );
   }
 }

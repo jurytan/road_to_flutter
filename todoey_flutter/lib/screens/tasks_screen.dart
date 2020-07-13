@@ -2,31 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:todoeyflutter/utilities/constants.dart';
 import 'package:todoeyflutter/widgets/task_list.dart';
 import 'package:todoeyflutter/screens/add_task_screen.dart';
-import 'package:todoeyflutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoeyflutter/models/task_list_data.dart';
 
-class TasksScreen extends StatefulWidget {
-  @override
-  _TasksScreenState createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-  final _messageTextCtrl = TextEditingController();
-  String taskToAdd;
-  List<Task> tasks = [
-    Task(
-      taskText: 'Buy milk',
-      isDone: false,
-    ),
-    Task(
-      taskText: 'Buy eggs',
-      isDone: false,
-    ),
-    Task(
-      taskText: 'Buy bread',
-      isDone: true,
-    ),
-  ];
-
+class TasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,23 +17,7 @@ class _TasksScreenState extends State<TasksScreen> {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            builder: (context) => AddTaskScreen(
-              messageTextCtrl: _messageTextCtrl,
-              textFieldOnChanged: (value) => taskToAdd = value,
-              buttonOnPressed: (() {
-                //Add value to the list
-                setState(
-                  () => tasks.add(
-                    Task(
-                      taskText: taskToAdd,
-                      isDone: false,
-                    ),
-                  ),
-                );
-                _messageTextCtrl.clear();
-                Navigator.pop(context);
-              }),
-            ),
+            builder: (context) => AddTaskScreen(),
           );
         },
       ),
@@ -83,7 +46,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   style: kTitleTextStyle,
                 ),
                 Text(
-                  '12 Tasks',
+                  '${Provider.of<TaskListData>(context).taskCount} Tasks',
                   style: kSubtitleTextStyle,
                 ),
               ],
@@ -91,11 +54,9 @@ class _TasksScreenState extends State<TasksScreen> {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               decoration: kRoundedTopDecoration,
-              child: TaskList(
-                tasks: tasks,
-              ),
+              child: TaskList(),
             ),
           ),
         ],

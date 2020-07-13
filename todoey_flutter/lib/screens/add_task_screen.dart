@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:todoeyflutter/utilities/constants.dart';
+import 'package:todoeyflutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoeyflutter/models/task_list_data.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  AddTaskScreen(
-      {this.messageTextCtrl, this.textFieldOnChanged, this.buttonOnPressed});
-
-  final TextEditingController messageTextCtrl;
-  final Function textFieldOnChanged;
-  final Function buttonOnPressed;
+  final _messageTextCtrl = TextEditingController();
+  String taskToAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +35,8 @@ class AddTaskScreen extends StatelessWidget {
                     style: kBottomSheetTitleTextStyle,
                   ),
                   TextField(
-                    controller: messageTextCtrl,
-                    onChanged: textFieldOnChanged,
+                    controller: _messageTextCtrl,
+                    onChanged: (value) => taskToAdd = value,
                     autofocus: true,
                     decoration: kBottomSheetTextFieldDecoration,
                   ),
@@ -49,7 +48,15 @@ class AddTaskScreen extends StatelessWidget {
                       Expanded(
                         child: FlatButton(
                           color: Colors.lightBlueAccent,
-                          onPressed: buttonOnPressed,
+                          onPressed: () {
+                            // Need to add listen: false because ScrollView is Stateless,
+                            // so it tries to rebuild something that doesn't need rebuilding
+                            // Adding this argument allows it to function properly
+                            Provider.of<TaskListData>(context, listen: false)
+                                .addTask(taskToAdd);
+                            _messageTextCtrl.clear();
+                            Navigator.pop(context);
+                          },
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
